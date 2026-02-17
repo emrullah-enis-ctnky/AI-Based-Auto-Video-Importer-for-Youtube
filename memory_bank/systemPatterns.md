@@ -23,4 +23,4 @@ project_root/
     - If absent, invoke File Dialogs.
 3. **Tiered Logging:** A custom logger class that handles dual stream output (Terminal: Rich, File: Standard).
 4. **Stylish UI Pattern:** Use of `rich` panels, banners, and banners to provide a premium CLI experience.
-5. **Commit-Push Flow:** Operational rule to ensure local changes are immediately synced to remote.
+5. **Commit-Push Flow (STRICT):** Operational rule to ensure local changes are immediately synced to remote. *Every commit MUST be followed by a push.*
