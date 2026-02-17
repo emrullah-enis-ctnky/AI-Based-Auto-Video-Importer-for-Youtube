@@ -1,0 +1,27 @@
+# Environment Variables
+.env
+
+# Google API Credentials
+client_secret.json
+token.json
+
+# Logs
+logs/
+*.log
+
+# Python clutter
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# IDEs
+.vscode/
+.idea/
+
+# Test scripts
+test_phase1.py
