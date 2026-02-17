@@ -21,5 +21,6 @@ project_root/
 2. **Hybrid Input Pattern:**
     - Try reading CLI arguments.
     - If absent, invoke File Dialogs.
-3. **Tiered Logging:** A custom logger class that handles dual stream output with varying verbosity.
-4. **Commit-Push Flow:** Operational rule to ensure local changes are immediately synced to remote.
+3. **Tiered Logging:** A custom logger class that handles dual stream output (Terminal: Rich, File: Standard).
+4. **Stylish UI Pattern:** Use of `rich` panels, banners, and banners to provide a premium CLI experience.
+5. **Commit-Push Flow:** Operational rule to ensure local changes are immediately synced to remote.
