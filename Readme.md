@@ -75,7 +75,7 @@ project_root/
 
 ## 4. Gelecek Planı (GUI Fazı)
 
-* Terminal yapısı stabil çalıştıktan sonra, bu modüler yapı bozulmadan üzerine bir **PyQt** veya **Tkinter** arayüzü inşa edilecektir.
+* Terminal yapısı stabil çalıştıktan sonra, bu modüler yapı bozulmadan üzerine bir **Tkinter** arayüzü inşa edilecektir.
 * Arayüzde "Dosya Seç" butonları, analiz sonucunu önizleme ekranı ve "Yükle" butonu bulunacaktır.
 
 ---

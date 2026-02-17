@@ -75,7 +75,7 @@ This document outlines the detailed execution plan for the AI-Powered YouTube Au
 
 * **Goal:** Move from CLI to a standalone desktop application.
 * **Tasks:**
-  * [ ] User-friendly interface for file selection.
+  * [ ] User-friendly **Tkinter** interface for file selection.
   * [ ] Live preview of AI-generated metadata.
   * [ ] Dashboard for upload history/logs.
 * **Status:** Researching.

@@ -5,7 +5,7 @@
 - **Language:** Python 3.x
 - **AI:** Gemini API (Google Generative AI SDK)
 - **YouTube:** YouTube Data API v3 (Google API Client Library)
-- **GUI/Dialogs:** Tkinter or PyQt (for file selection fallback)
+- **GUI/Dialogs:** Tkinter (Dosya seçimi ve uygulama arayüzü için)
 - **Utilities:** `python-dotenv` (ENV), `tqdm` (Progress), `pip` (Dependency management)
 
 ## Architecture
