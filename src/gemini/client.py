@@ -14,9 +14,9 @@ def setup_gemini():
         
     try:
         genai.configure(api_key=api_key)
-        # Upgraded to Gemini 2.0 Flash (Next-gen frontier model for best SEO results)
-        model = genai.GenerativeModel('gemini-2.0-flash-exp') 
-        logger.debug("Gemini 2.0 Flash istemcisi başarıyla yapılandırıldı.")
+        # Upgraded to Gemini 3 Flash (Latest frontier model)
+        model = genai.GenerativeModel('gemini-3-flash-preview') 
+        logger.debug("Gemini 3 Flash istemcisi başarıyla yapılandırıldı.")
         return model
     except Exception as e:
         logger.error(f"Gemini yapılandırması sırasında hata: {str(e)}")
