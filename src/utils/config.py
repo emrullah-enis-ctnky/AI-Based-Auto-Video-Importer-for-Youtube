@@ -17,6 +17,12 @@ class Config:
         self.LOG_DIR = os.path.join(os.getcwd(), "logs")
         self.LOG_FILE = os.path.join(self.LOG_DIR, "app.log")
 
+    def get(self, key, default=None):
+        """
+        Retrieves a configuration value by key.
+        """
+        return getattr(self, key, default)
+
     def validate(self):
         """
         Validates that all required environment variables are set.
