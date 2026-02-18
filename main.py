@@ -79,22 +79,26 @@ def main():
         if thumbnail_path:
             set_thumbnail(youtube, video_id, thumbnail_path)
         
-        logger.banner("🎉 İŞLEM BAŞARIYLA TAMAMLANDI")
+        # Her Şey Hazır - Final Effect
+        logger.banner("✨ İŞLEM BAŞARIYLA TAMAMLANDI")
         
         summary_panel = Panel(
-            f"[bold green]Video ID:[/bold green] {video_id}\n"
-            f"[bold green]Link:[/bold green] https://youtu.be/{video_id}\n"
-            f"[bold yellow]Durum:[/bold yellow] Gizli (Private)\n"
-            f"[bold blue]Analiz:[/bold blue] Gemini 3 Flash Multimodal",
-            title="Özet Rapor",
-            border_style="green"
+            f"[bold cyan]DURUM         :[/bold cyan] [bold green]ÇEVRİMİÇİ[/bold green]\n"
+            f"[bold cyan]VİDEO ID      :[/bold cyan] [white]{video_id}[/white]\n"
+            f"[bold cyan]YOUTUBE LİNKİ :[/bold cyan] [underline blue]https://youtu.be/{video_id}[/underline blue]\n"
+            f"[bold cyan]GİZLİLİK      :[/bold cyan] [bold yellow]ÖZEL (PRIVATE)[/bold yellow]\n"
+            f"[bold cyan]AI ANALİZİ    :[/bold cyan] [italic magenta]MULTIMODAL TAMAMLANDI[/italic magenta]\n\n"
+            "[bold green]>>> HER ŞEY HAZIR. GÖREV TAMAMLANDI. <<<[/bold green]",
+            title="[bold white]SİSTEM ÖZETİ[/bold white]",
+            border_style="bold cyan",
+            padding=(1, 2)
         )
         console.print(summary_panel)
     else:
-        logger.error("İşlem bir hata nedeniyle tamamlanamadı.")
+        logger.error("HATA: Video yüklenemedi.")
         sys.exit(1)
 
-    logger.info("\n[bold magenta]AI-Powered YouTube Automation Tool (v1.0) - Phase 5 Tamamlandı![/bold magenta]")
+    logger.info("\n[bold cyan]Proje v1.0 - Tüm sistem optimizasyonları devrede.[/bold cyan]")
 
 if __name__ == "__main__":
     try:
