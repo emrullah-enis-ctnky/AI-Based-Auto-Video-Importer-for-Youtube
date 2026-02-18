@@ -10,11 +10,11 @@ Follow these rules strictly:
 4. USER INSTRUCTIONS: You MUST follow the user's special instructions provided below with the highest priority.
 
 Output MUST be in valid JSON format with the following keys:
-{
+{{
   "title": "string",
   "description": "string",
   "tags": ["tag1", "tag2", ...]
-}
+}}
 
 Do not provide any markdown formatting or extra text. Only the JSON.
 
