@@ -13,7 +13,8 @@ def ensure_directories():
         "src/youtube",
         "src/video_analiz",
         "src/video_yukleme",
-        "src/utils"
+        "src/utils",
+        "temp"
     ]
     
     for d in dirs:

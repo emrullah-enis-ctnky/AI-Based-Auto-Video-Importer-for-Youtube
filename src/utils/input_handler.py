@@ -66,6 +66,20 @@ def get_inputs():
         else:
             logger.info("Ek not belirtilmedi.")
 
+    # Compression Check & Prompt
+    from .media_processor import is_ffmpeg_installed
+    from rich.prompt import Confirm
+    
+    use_compression = False
+    if is_ffmpeg_installed():
+        use_compression = Confirm.ask("\n[bold yellow]Hızlı AI Analizi (Sıkıştırma) aktif edilsin mi?[/bold yellow]", default=True)
+        if use_compression:
+            logger.info("Medya sıkıştırma aktif. Analiz aşaması hızlanacak.")
+    else:
+        logger.warning("\n[bold red]Sistemde FFmpeg bulunamadı.[/bold red]")
+        logger.info("Daha hızlı analiz ve düşük kota kullanımı için FFmpeg kurmanız önerilir.")
+        logger.info("Şu anlık orijinal büyük dosyalar gönderilecek.")
+
     # Validate existence
     if not os.path.exists(video_path):
         logger.error(f"Video dosyası bulunamadı: {video_path}")
@@ -75,7 +89,7 @@ def get_inputs():
         logger.error(f"Thumbnail dosyası bulunamadı: {thumbnail_path}")
         sys.exit(1)
         
-    return video_path, thumbnail_path, user_notes, args.debug
+    return video_path, thumbnail_path, user_notes, args.debug, use_compression
 
 if __name__ == "__main__":
     v, t = get_inputs()

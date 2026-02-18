@@ -6,3 +6,5 @@ google-auth-httplib2
 tqdm
 tk
 rich
+Pillow
+ffmpeg-python

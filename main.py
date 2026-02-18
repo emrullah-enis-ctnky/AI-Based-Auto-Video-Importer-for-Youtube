@@ -27,7 +27,7 @@ def main():
     
     # 3. Get Inputs (CLI or GUI)
     logger.step(3, "Giriş Bilgileri")
-    video_path, thumbnail_path, user_notes, debug_mode = get_inputs()
+    video_path, thumbnail_path, user_notes, debug_mode, use_compression = get_inputs()
     
     if debug_mode:
         import logging
@@ -42,7 +42,7 @@ def main():
     from rich.panel import Panel
     from rich.table import Table
     
-    metadata = analyze_content(video_path, thumbnail_path, user_notes)
+    metadata = analyze_content(video_path, thumbnail_path, user_notes, use_compression)
     
     if metadata:
         logger.success("AI Analizi başarıyla tamamlandı!")

@@ -6,7 +6,7 @@ from .prompts import SEO_PROMPT
 from .models import VideoMetadata
 from utils.logger import logger
 
-def analyze_content(video_path, thumbnail_path, user_notes=""):
+def analyze_content(video_path, thumbnail_path, user_notes="", use_compression=False):
     """
     Analyzes video, thumbnail, and user notes to generate metadata.
     """
@@ -14,17 +14,34 @@ def analyze_content(video_path, thumbnail_path, user_notes=""):
     if not model:
         return None
 
+    # Temporary paths for compressed files
+    v_ai_path = video_path
+    t_ai_path = thumbnail_path
+    temp_files = []
+
     try:
-        logger.info(f"Multimodal dosyalar yükleniyor...")
+        # 1. Compress for AI if requested
+        if use_compression:
+            from utils.media_processor import compress_video_for_ai, compress_image_for_ai
+            
+            # Prepare temp paths
+            v_temp = os.path.join("temp", f"ai_video_{int(time.time())}.mp4")
+            t_temp = os.path.join("temp", f"ai_thumb_{int(time.time())}.jpg")
+            
+            v_ai_path = compress_video_for_ai(video_path, v_temp)
+            if v_ai_path != video_path:
+                temp_files.append(v_ai_path)
+                
+            t_ai_path = compress_image_for_ai(thumbnail_path, t_temp)
+            if t_ai_path != thumbnail_path:
+                temp_files.append(t_ai_path)
+
+        logger.info(f"Multimodal dosyalar AI sunucusuna yükleniyor...")
         
-        # 1. Upload Video
-        video_file = genai.upload_file(path=video_path)
-        logger.info(f"Video yüklendi (File ID: {video_file.name}). İşleniyor...")
-
-        # 2. Upload Thumbnail
-        thumbnail_file = genai.upload_file(path=thumbnail_path)
-        logger.info(f"Thumbnail yüklendi (File ID: {thumbnail_file.name}).")
-
+        # 2. Upload Files
+        video_file = genai.upload_file(path=v_ai_path)
+        thumbnail_file = genai.upload_file(path=t_ai_path)
+        
         # 3. Wait for Video processing
         while video_file.state.name == "PROCESSING":
             time.sleep(5)
@@ -71,11 +88,18 @@ def analyze_content(video_path, thumbnail_path, user_notes=""):
             
             # 7. Cleanup
             try:
+                # AI Server Cleanup
                 genai.delete_file(video_file.name)
                 genai.delete_file(thumbnail_file.name)
-                logger.debug("Google AI sunucusundaki geçici dosyalar silindi.")
+                
+                # Local Temp Cleanup
+                for tf in temp_files:
+                    if os.path.exists(tf):
+                        os.remove(tf)
+                
+                logger.debug("Geçici dosyalar (sunucu ve yerel) silindi.")
             except Exception as e:
-                logger.warning(f"Geçici dosyalar silinirken hata (limiti etkilemez): {str(e)}")
+                logger.warning(f"Geçici dosyalar temizlenirken hata: {str(e)}")
             
             return metadata
             

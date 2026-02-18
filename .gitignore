@@ -4,6 +4,10 @@
 # Google API Credentials
 client_secret.json
 token.json
+token.pickle
+
+# Temporary Files
+temp/
 
 # Logs
 logs/
