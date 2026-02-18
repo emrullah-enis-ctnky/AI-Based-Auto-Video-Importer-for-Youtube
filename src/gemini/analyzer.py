@@ -1,4 +1,5 @@
 import time
+import os
 import json
 import google.generativeai as genai
 from .client import setup_gemini
