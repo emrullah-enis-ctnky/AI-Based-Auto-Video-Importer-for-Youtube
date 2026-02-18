@@ -2,9 +2,9 @@
 
 ## Status Overview
 
-- **Current Phase:** Phase 3 (AI Analysis)
-- **Overall Completion:** 50%
-- **Current Goal:** Start Phase 4 (YouTube Upload Integration).
+- **Current Phase:** Phase 4 (YouTube Automation)
+- **Overall Completion:** 70%
+- **Current Goal:** Integrate all components into a final polished CLI tool and handle edge cases.
 
 ## Milestones
 
@@ -13,7 +13,7 @@
 - [x] Phase 1: Foundation (Logger, Utils, Env).
 - [x] Phase 2: Dependency & Inputs (Auto-installer, File Dialogs).
 - [x] Phase 3: AI Core (Gemini Analysis).
-- [ ] Phase 4: YouTube Core (OAuth & Upload).
-- [ ] Phase 4: YouTube Core (OAuth & Upload).
+- [x] Phase 4: YouTube Core (OAuth & Upload).
+- [ ] Phase 5: Testing & Refinement.
 - [ ] Phase 5: Testing & Refinement.
 - [ ] Phase 6: GUI Construction.

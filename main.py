@@ -57,10 +57,30 @@ def main():
         logger.error("AI Analizi başarısız oldu. Lütfen logları kontrol edin.")
         sys.exit(1)
     
-    # Future Phases will continue here:
-    # Phase 4: YouTube Upload
+    # 5. YouTube Automation
+    logger.step(5, "YouTube Yükleme")
+    from youtube.auth import get_youtube_service
+    from youtube.uploader import upload_video
+    from youtube.thumbnail import set_thumbnail
     
-    logger.info("\nŞu anlık bu kadar! Phase 2 tamamlandı. AI Analiz aşaması için beklemede kalın.")
+    youtube = get_youtube_service()
+    if not youtube:
+        logger.error("YouTube bağlantısı kurulamadı. Lütfen client_secret.json dosyasını ve internet bağlantınızı kontrol edin.")
+        sys.exit(1)
+        
+    video_id = upload_video(youtube, video_path, metadata)
+    
+    if video_id:
+        if thumbnail_path:
+            set_thumbnail(youtube, video_id, thumbnail_path)
+        
+        logger.banner("🎉 İŞLEM BAŞARIYLA TAMAMLANDI")
+        logger.success(f"Videonuz YouTube'a yüklendi (Gizli): https://youtu.be/{video_id}")
+    else:
+        logger.error("Video yüklenemedi. Detaylar için logs/app.log dosyasına bakın.")
+        sys.exit(1)
+
+    logger.info("\nProje Phase 4 tamamlandı! Artık tam otomatik video analizi ve yükleme yapabiliyoruz.")
 
 if __name__ == "__main__":
     try:
