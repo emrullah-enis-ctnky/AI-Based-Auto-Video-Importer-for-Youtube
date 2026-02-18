@@ -6,38 +6,45 @@ from .prompts import SEO_PROMPT
 from .models import VideoMetadata
 from utils.logger import logger
 
-def analyze_video(video_path):
+def analyze_content(video_path, thumbnail_path, user_notes=""):
     """
-    Uploads a video to Google Generative AI and analyzes it to generate metadata.
+    Analyzes video, thumbnail, and user notes to generate metadata.
     """
     model = setup_gemini()
     if not model:
         return None
 
     try:
-        logger.info(f"Video yükleniyor: {video_path}")
-        # 1. Upload the file
+        logger.info(f"Multimodal dosyalar yükleniyor...")
+        
+        # 1. Upload Video
         video_file = genai.upload_file(path=video_path)
-        logger.info(f"Yükleme tamamlandı, işleniyor (File ID: {video_file.name})...")
+        logger.info(f"Video yüklendi (File ID: {video_file.name}). İşleniyor...")
 
-        # 2. Wait for processing
+        # 2. Upload Thumbnail
+        thumbnail_file = genai.upload_file(path=thumbnail_path)
+        logger.info(f"Thumbnail yüklendi (File ID: {thumbnail_file.name}).")
+
+        # 3. Wait for Video processing
         while video_file.state.name == "PROCESSING":
             time.sleep(5)
             video_file = genai.get_file(video_file.name)
-            logger.debug("İşleniyor...")
+            logger.debug("Video işleniyor...")
 
         if video_file.state.name == "FAILED":
             logger.error("Video işleme başarısız oldu.")
             return None
 
-        logger.success("Video başarıyla işlendi. AI Analizi başlıyor...")
+        logger.success("Tüm dosyalar hazır. AI Analizi başlatılıyor...")
 
-        # 3. Generate content
-        response = model.generate_content([video_file, SEO_PROMPT])
+        # 4. Prepare Prompt
+        final_prompt = SEO_PROMPT.format(user_notes=user_notes if user_notes else "None provided.")
+
+        # 5. Generate content with both video and thumbnail
+        response = model.generate_content([video_file, thumbnail_file, final_prompt])
         
-        # 4. Parse JSON response
+        # 6. Parse JSON response
         try:
-            # AI might wrap JSON in markdown blocks
             content = response.text.strip()
             if content.startswith("```json"):
                 content = content[7:-3].strip()
@@ -52,8 +59,9 @@ def analyze_video(video_path):
                 tags=data.get("tags", [])
             )
             
-            # 5. Cleanup (Optional but good practice)
+            # 7. Cleanup (Optional)
             # genai.delete_file(video_file.name)
+            # genai.delete_file(thumbnail_file.name)
             
             return metadata
             
@@ -63,5 +71,5 @@ def analyze_video(video_path):
             return None
 
     except Exception as e:
-        logger.error(f"Video analiz hatası: {str(e)}")
+        logger.error(f"Multimodal analiz hatası: {str(e)}")
         return None

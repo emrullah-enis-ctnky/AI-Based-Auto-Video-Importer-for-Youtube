@@ -27,17 +27,17 @@ def main():
     
     # 3. Get Inputs (CLI or GUI)
     logger.step(3, "Giriş Bilgileri")
-    video_path, thumbnail_path = get_inputs()
+    video_path, thumbnail_path, user_notes = get_inputs()
     
     logger.success("Giriş verileri başarıyla alındı.")
 
     # 4. AI Analysis
-    logger.step(4, "AI Video Analizi")
-    from gemini.analyzer import analyze_video
+    logger.step(4, "AI Multimodal Analiz (Video + Görsel + Notlar)")
+    from gemini.analyzer import analyze_content
     from rich.panel import Panel
     from rich.table import Table
     
-    metadata = analyze_video(video_path)
+    metadata = analyze_content(video_path, thumbnail_path, user_notes)
     
     if metadata:
         logger.success("AI Analizi başarıyla tamamlandı!")

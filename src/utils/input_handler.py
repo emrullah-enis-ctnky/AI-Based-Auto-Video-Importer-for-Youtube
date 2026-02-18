@@ -23,12 +23,13 @@ def get_inputs():
     """
     parser = argparse.ArgumentParser(description="AI-Powered YouTube Automation Tool")
     parser.add_argument("--video", type=str, help="Path to the video file")
-    parser.add_argument("--thumbnail", type=str, help="Path to the thumbnail image")
+    parser.add_argument("--notes", type=str, help="Extra notes for AI analysis")
     
     args = parser.parse_args()
     
     video_path = args.video
     thumbnail_path = args.thumbnail
+    user_notes = args.notes
     
     # Fallback to File Dialog for Video
     if not video_path:
@@ -54,6 +55,15 @@ def get_inputs():
             sys.exit(1)
         logger.info(f"Seçilen Thumbnail: {os.path.basename(thumbnail_path)}")
 
+    # Interactive input for notes if not provided
+    if not user_notes:
+        from rich.prompt import Prompt
+        user_notes = Prompt.ask("\n[bold cyan]AI için ek notlarınız veya talimatlarınız var mı?[/bold cyan] (Boş bırakılabilir)", default="")
+        if user_notes:
+            logger.info(f"Notunuz kaydedildi: {user_notes}")
+        else:
+            logger.info("Ek not belirtilmedi.")
+
     # Validate existence
     if not os.path.exists(video_path):
         logger.error(f"Video dosyası bulunamadı: {video_path}")
@@ -63,7 +73,7 @@ def get_inputs():
         logger.error(f"Thumbnail dosyası bulunamadı: {thumbnail_path}")
         sys.exit(1)
         
-    return video_path, thumbnail_path
+    return video_path, thumbnail_path, user_notes
 
 if __name__ == "__main__":
     v, t = get_inputs()
