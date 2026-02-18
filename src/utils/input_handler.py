@@ -23,6 +23,7 @@ def get_inputs():
     """
     parser = argparse.ArgumentParser(description="AI-Powered YouTube Automation Tool")
     parser.add_argument("--video", type=str, help="Path to the video file")
+    parser.add_argument("--thumbnail", type=str, help="Path to the thumbnail image")
     parser.add_argument("--notes", type=str, help="Extra notes for AI analysis")
     
     args = parser.parse_args()
