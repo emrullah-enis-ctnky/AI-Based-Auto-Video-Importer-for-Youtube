@@ -50,25 +50,26 @@ This document outlines the detailed execution plan for the AI-Powered YouTube Au
 
 ---
 
-## Phase 4: YouTube Automation (EST: 5 Hours)
+## Phase 4: YouTube Automation (COMPLETE)
 
 * **Goal:** Secure and efficient video uploading.
 * **Tasks:**
-  * [ ] **OAuth2 Flow:** Secure authentication and token storage.
-  * [ ] **Chunked Upload:** Implementing resumable uploads for large files.
-  * [ ] **Thumbnail Setter:** Post-upload logic to set the custom thumbnail.
-* **Status:** Pending.
+  * [x] **OAuth2 Flow:** Secure authentication and token storage.
+  * [x] **Chunked Upload:** Implementing resumable uploads for large files.
+  * [x] **Thumbnail Setter:** Post-upload logic to set the custom thumbnail.
+* **Status:** Done.
 
 ---
 
-## Phase 5: Final Orchestration & CLI (EST: 2 Hours)
+## Phase 5: Testing & Refinement (IN PROGRESS)
 
-* **Goal:** Tying it all together into `main.py`.
+* **Goal:** Robust error handling and system optimization.
 * **Tasks:**
-  * [ ] Implement the full sequence: Dep check -> Input -> Analyze -> Upload -> Log.
-  * [ ] **Progress Bar:** Integration of `tqdm` for upload progress.
-  * [ ] Comprehensive error handling & retries.
-* **Status:** Pending.
+  * [ ] **API Cleanup:** Automatically delete files from Google AI after analysis.
+  * [ ] **Retry Logic:** Handle transient network/API errors gracefully.
+  * [ ] **CLI Polish:** Final terminal UI improvements and summary report.
+* **Next Steps:** Move to Phase 6 (GUI Construction).
+* **Status:** In Progress.
 
 ---
 

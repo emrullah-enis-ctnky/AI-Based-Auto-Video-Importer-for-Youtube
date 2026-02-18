@@ -25,6 +25,7 @@ def get_inputs():
     parser.add_argument("--video", type=str, help="Path to the video file")
     parser.add_argument("--thumbnail", type=str, help="Path to the thumbnail image")
     parser.add_argument("--notes", type=str, help="Extra notes for AI analysis")
+    parser.add_argument("--debug", action="store_true", help="Enable detailed debug logging")
     
     args = parser.parse_args()
     
@@ -74,7 +75,7 @@ def get_inputs():
         logger.error(f"Thumbnail dosyası bulunamadı: {thumbnail_path}")
         sys.exit(1)
         
-    return video_path, thumbnail_path, user_notes
+    return video_path, thumbnail_path, user_notes, args.debug
 
 if __name__ == "__main__":
     v, t = get_inputs()

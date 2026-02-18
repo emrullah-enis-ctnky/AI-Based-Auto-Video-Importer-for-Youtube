@@ -40,8 +40,18 @@ def analyze_content(video_path, thumbnail_path, user_notes=""):
         # 4. Prepare Prompt
         final_prompt = SEO_PROMPT.format(user_notes=user_notes if user_notes else "None provided.")
 
-        # 5. Generate content with both video and thumbnail
-        response = model.generate_content([video_file, thumbnail_file, final_prompt])
+        # 5. Generate content with both video and thumbnail (with retry logic)
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                response = model.generate_content([video_file, thumbnail_file, final_prompt])
+                break
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    logger.warning(f"AI Analiz denemesi {attempt+1} başarısız, tekrar deneniyor... ({str(e)})")
+                    time.sleep(2)
+                else:
+                    raise e
         
         # 6. Parse JSON response
         try:
@@ -59,9 +69,13 @@ def analyze_content(video_path, thumbnail_path, user_notes=""):
                 tags=data.get("tags", [])
             )
             
-            # 7. Cleanup (Optional)
-            # genai.delete_file(video_file.name)
-            # genai.delete_file(thumbnail_file.name)
+            # 7. Cleanup
+            try:
+                genai.delete_file(video_file.name)
+                genai.delete_file(thumbnail_file.name)
+                logger.debug("Google AI sunucusundaki geçici dosyalar silindi.")
+            except Exception as e:
+                logger.warning(f"Geçici dosyalar silinirken hata (limiti etkilemez): {str(e)}")
             
             return metadata
             

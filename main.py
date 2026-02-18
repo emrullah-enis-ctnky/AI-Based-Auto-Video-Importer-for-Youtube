@@ -27,7 +27,12 @@ def main():
     
     # 3. Get Inputs (CLI or GUI)
     logger.step(3, "Giriş Bilgileri")
-    video_path, thumbnail_path, user_notes = get_inputs()
+    video_path, thumbnail_path, user_notes, debug_mode = get_inputs()
+    
+    if debug_mode:
+        import logging
+        logger.logger.setLevel(logging.DEBUG)
+        logger.info("Debug modu aktif edildi. Detaylı loglar gösteriliyor.")
     
     logger.success("Giriş verileri başarıyla alındı.")
 
@@ -75,12 +80,21 @@ def main():
             set_thumbnail(youtube, video_id, thumbnail_path)
         
         logger.banner("🎉 İŞLEM BAŞARIYLA TAMAMLANDI")
-        logger.success(f"Videonuz YouTube'a yüklendi (Gizli): https://youtu.be/{video_id}")
+        
+        summary_panel = Panel(
+            f"[bold green]Video ID:[/bold green] {video_id}\n"
+            f"[bold green]Link:[/bold green] https://youtu.be/{video_id}\n"
+            f"[bold yellow]Durum:[/bold yellow] Gizli (Private)\n"
+            f"[bold blue]Analiz:[/bold blue] Gemini 3 Flash Multimodal",
+            title="Özet Rapor",
+            border_style="green"
+        )
+        console.print(summary_panel)
     else:
-        logger.error("Video yüklenemedi. Detaylar için logs/app.log dosyasına bakın.")
+        logger.error("İşlem bir hata nedeniyle tamamlanamadı.")
         sys.exit(1)
 
-    logger.info("\nProje Phase 4 tamamlandı! Artık tam otomatik video analizi ve yükleme yapabiliyoruz.")
+    logger.info("\n[bold magenta]AI-Powered YouTube Automation Tool (v1.0) - Phase 5 Tamamlandı![/bold magenta]")
 
 if __name__ == "__main__":
     try:

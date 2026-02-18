@@ -1,4 +1,5 @@
 import os
+import time
 from googleapiclient.http import MediaFileUpload
 from utils.logger import logger, console
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, DownloadColumn, TransferSpeedColumn
@@ -37,6 +38,7 @@ def upload_video(youtube, video_path, metadata):
     )
 
     video_id = None
+    max_retries = 5
     
     with Progress(
         SpinnerColumn(),
@@ -49,7 +51,20 @@ def upload_video(youtube, video_path, metadata):
         task = progress.add_task("Yükleniyor...", total=os.path.getsize(video_path))
         
         while video_id is None:
-            status, response = request.next_chunk()
+            attempt = 0
+            while attempt < max_retries:
+                try:
+                    status, response = request.next_chunk()
+                    break
+                except Exception as e:
+                    attempt += 1
+                    if attempt < max_retries:
+                        logger.warning(f"Yükleme hatası, tekrar deneniyor ({attempt}/{max_retries})...")
+                        time.sleep(2 ** attempt) # Exponential backoff
+                    else:
+                        logger.error(f"Yükleme başarısız oldu: {str(e)}")
+                        return None
+
             if status:
                 progress.update(task, completed=status.resumable_progress)
             if response is not None:
