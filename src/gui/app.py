@@ -84,6 +84,23 @@ class YouTubeAutomationApp(ctk.CTk):
         self.settings_button.configure(fg_color=("gray75", "gray25"))
         self.home_button.configure(fg_color="transparent")
 
+    def show_process(self, video_path, thumb_path, user_notes):
+        self._clear_main_content()
+        from .pages.process import ProcessPage
+        self.process_page = ProcessPage(
+            self.main_content_frame,
+            video_path=video_path,
+            thumb_path=thumb_path,
+            user_notes=user_notes,
+            use_compression=self.use_compression.get(),
+            debug_mode=self.debug_mode.get(),
+            fg_color="transparent"
+        )
+        self.process_page.pack(fill="both", expand=True)
+        # Highlight nothing in sidebar during process? Or just keep home highlighted?
+        self.home_button.configure(fg_color="transparent")
+        self.settings_button.configure(fg_color="transparent")
+
     def _clear_main_content(self):
         for widget in self.main_content_frame.winfo_children():
             widget.destroy()

@@ -7,9 +7,10 @@ from .prompts import SEO_PROMPT
 from .models import VideoMetadata
 from utils.logger import logger
 
-def analyze_content(video_path, thumbnail_path, user_notes="", use_compression=False):
+def analyze_content(video_path, thumbnail_path, user_notes="", use_compression=False, progress_callback=None):
     """
     Analyzes video, thumbnail, and user notes to generate metadata.
+    progress_callback: Optional function(stage, value)
     """
     model = setup_gemini()
     if not model:
@@ -23,6 +24,7 @@ def analyze_content(video_path, thumbnail_path, user_notes="", use_compression=F
     try:
         # 1. Compress for AI if requested
         if use_compression:
+            if progress_callback: progress_callback("ai", 0.05)
             from utils.media_processor import compress_video_for_ai, compress_image_for_ai
             
             # Prepare temp paths
@@ -32,12 +34,17 @@ def analyze_content(video_path, thumbnail_path, user_notes="", use_compression=F
             v_ai_path = compress_video_for_ai(video_path, v_temp)
             if v_ai_path != video_path:
                 temp_files.append(v_ai_path)
+            
+            if progress_callback: progress_callback("ai", 0.15)
                 
             t_ai_path = compress_image_for_ai(thumbnail_path, t_temp)
             if t_ai_path != thumbnail_path:
                 temp_files.append(t_ai_path)
+            
+            if progress_callback: progress_callback("ai", 0.25)
 
         logger.info(f"Multimodal dosyalar AI sunucusuna yükleniyor...")
+        if progress_callback: progress_callback("ai", 0.35)
         
         # 2. Upload Files
         video_file = genai.upload_file(path=v_ai_path)
@@ -45,6 +52,7 @@ def analyze_content(video_path, thumbnail_path, user_notes="", use_compression=F
         
         # 3. Wait for Video processing
         while video_file.state.name == "PROCESSING":
+            if progress_callback: progress_callback("ai", 0.5)
             time.sleep(5)
             video_file = genai.get_file(video_file.name)
             logger.debug("Video işleniyor...")
@@ -54,6 +62,7 @@ def analyze_content(video_path, thumbnail_path, user_notes="", use_compression=F
             return None
 
         logger.success("Tüm dosyalar hazır. AI Analizi başlatılıyor...")
+        if progress_callback: progress_callback("ai", 0.7)
 
         # 4. Prepare Prompt
         final_prompt = SEO_PROMPT.format(user_notes=user_notes if user_notes else "None provided.")
@@ -62,6 +71,7 @@ def analyze_content(video_path, thumbnail_path, user_notes="", use_compression=F
         max_retries = 3
         for attempt in range(max_retries):
             try:
+                if progress_callback: progress_callback("ai", 0.8)
                 response = model.generate_content([video_file, thumbnail_file, final_prompt])
                 break
             except Exception as e:
@@ -70,6 +80,8 @@ def analyze_content(video_path, thumbnail_path, user_notes="", use_compression=F
                     time.sleep(2)
                 else:
                     raise e
+        
+        if progress_callback: progress_callback("ai", 0.9)
         
         # 6. Parse JSON response
         try:
@@ -88,6 +100,7 @@ def analyze_content(video_path, thumbnail_path, user_notes="", use_compression=F
             )
             
             # 7. Cleanup
+            if progress_callback: progress_callback("ai", 1.0)
             try:
                 # AI Server Cleanup
                 genai.delete_file(video_file.name)

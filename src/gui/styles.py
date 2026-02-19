@@ -7,18 +7,22 @@ ctk.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark
 # Color Palette Definitions
 COLORS = {
     "dark": {
-        "bg": "#1A1A1A",
-        "sidebar": "#121212",
+        "bg": "#0F0F0F",
+        "sidebar": "#161616",
+        "card_bg": "#1E222D",    # Deep Navy/Slate
+        "card_hover": "#262C3D", # Lighter Navy
         "accent": "#00E5FF",  # Neon Cyan
         "text": "#FFFFFF",
         "secondary_text": "#AAAAAA",
         "success": "#00C853",
         "error": "#FF1744",
-        "border": "#2C2C2C"
+        "border": "#2D3447"
     },
     "light": {
-        "bg": "#F5F5F5",
+        "bg": "#F5F7FA",
         "sidebar": "#FFFFFF",
+        "card_bg": "#FFFFFF",
+        "card_hover": "#F0F4F8",
         "accent": "#1A73E8",  # Google Blue
         "text": "#202124",
         "secondary_text": "#5F6368",
@@ -30,11 +34,11 @@ COLORS = {
 
 # Typography
 FONTS = {
-    "title": ("Inter", 32, "bold"),
-    "header": ("Inter", 22, "bold"),
-    "body": ("Inter", 16, "normal"),
-    "small": ("Inter", 13, "normal"),
-    "mono": ("Consolas", 14, "normal")
+    "title": ("Arial", 38, "bold"),
+    "header": ("Arial", 26, "bold"),
+    "body": ("Arial", 18, "normal"),
+    "small": ("Arial", 14, "normal"),
+    "mono": ("Courier New", 16, "normal")
 }
 
 class ThemeManager:
