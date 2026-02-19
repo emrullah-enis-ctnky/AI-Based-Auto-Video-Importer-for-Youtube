@@ -23,7 +23,7 @@ COLORS = {
         "sidebar": "#FFFFFF",
         "card_bg": "#FFFFFF",
         "card_hover": "#F0F4F8",
-        "accent": "#0D47A1",  # Darker Blue
+        "accent": "#002171",  # Deep Navy Blue
         "text": "#202124",
         "secondary_text": "#5F6368",
         "success": "#1E8E3E",
@@ -34,7 +34,7 @@ COLORS = {
 
 # Typography
 FONTS = {
-    "title": ("Arial", 38, "bold"),
+    "title": ("Arial", 44, "bold"),
     "header": ("Arial", 26, "bold"),
     "body": ("Arial", 18, "normal"),
     "small": ("Arial", 14, "normal"),

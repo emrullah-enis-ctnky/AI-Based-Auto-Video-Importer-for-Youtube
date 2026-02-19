@@ -56,10 +56,10 @@ class ProcessPage(ctk.CTkFrame):
         self.ai_label = ctk.CTkLabel(self.ai_label_frame, text=Localizer.translate("ai_analysis"), font=FONTS["header"])
         self.ai_label.grid(row=0, column=0, sticky="w")
         
-        self.ai_pc_label = ctk.CTkLabel(self.ai_label_frame, text="%0", font=FONTS["header"], text_color=("#0D47A1", "#00E5FF"))
+        self.ai_pc_label = ctk.CTkLabel(self.ai_label_frame, text="%0", font=FONTS["header"], text_color=("#002171", "#00E5FF"))
         self.ai_pc_label.grid(row=0, column=1, sticky="e")
         
-        self.ai_progress = ctk.CTkProgressBar(self.progress_frame, height=25, progress_color=("#0D47A1", "#00E5FF"))
+        self.ai_progress = ctk.CTkProgressBar(self.progress_frame, height=25, progress_color=("#002171", "#00E5FF"))
         self.ai_progress.grid(row=1, column=0, padx=PADDING, pady=(0, 40), sticky="ew")
         self.ai_progress.set(0)
 
@@ -71,10 +71,10 @@ class ProcessPage(ctk.CTkFrame):
         self.upload_label = ctk.CTkLabel(self.upload_label_frame, text=Localizer.translate("yt_upload"), font=FONTS["header"])
         self.upload_label.grid(row=0, column=0, sticky="w")
         
-        self.upload_pc_label = ctk.CTkLabel(self.upload_label_frame, text="%0", font=FONTS["header"], text_color=("#0D47A1", "#00E5FF"))
+        self.upload_pc_label = ctk.CTkLabel(self.upload_label_frame, text="%0", font=FONTS["header"], text_color=("#002171", "#00E5FF"))
         self.upload_pc_label.grid(row=0, column=1, sticky="e")
         
-        self.upload_progress = ctk.CTkProgressBar(self.progress_frame, height=25, progress_color=("#0D47A1", "#00E5FF"))
+        self.upload_progress = ctk.CTkProgressBar(self.progress_frame, height=25, progress_color=("#002171", "#00E5FF"))
         self.upload_progress.grid(row=3, column=0, padx=PADDING, pady=0, sticky="ew")
         self.upload_progress.set(0)
 
@@ -97,7 +97,7 @@ class ProcessPage(ctk.CTkFrame):
 
         self.finish_btn = ctk.CTkButton(
             self.button_frame, text=Localizer.translate("finish_btn"), height=60, width=400,
-            fg_color=("#0D47A1", "#05E5FF"), text_color=("white", "black"), font=("Arial", 18, "bold"),
+            fg_color=("#002171", "#05E5FF"), text_color=("white", "black"), font=("Arial", 18, "bold"),
             command=self.on_finish
         )
 

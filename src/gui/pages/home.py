@@ -46,7 +46,7 @@ class MediaCard(ctk.CTkButton):
             self.configure(
                 text=f"\n{Localizer.translate(self.trans_key_title)}\n\n{name}",
                 border_color="#00E5FF", # Neon Cyan is fine for both? Or maybe darker for light?
-                text_color=("#0D47A1", "#00E5FF") # Dark Blue for light, Neon Cyan for dark
+                text_color=("#002171", "#00E5FF") # Deep Navy for light, Neon Cyan for dark
             )
             self._generate_preview(filename, is_video)
         else:
@@ -109,7 +109,7 @@ class HomePage(ctk.CTkFrame):
         self.welcome_label = ctk.CTkLabel(
             self.header_container, 
             text=Localizer.translate("app_title"), 
-            font=("Arial", 38, "bold"),
+            font=FONTS["title"],
             text_color=ThemeManager.get_tuple("accent")
         )
         self.welcome_label.grid(row=0, column=0)
@@ -162,8 +162,10 @@ class HomePage(ctk.CTkFrame):
         # 4. Action Button
         self.start_btn = ctk.CTkButton(
             self, text=Localizer.translate("start_btn"), height=60, 
-            font=("Arial", 20, "bold"), fg_color="#00E5FF", text_color="black",
-            hover_color="#00B8D4", corner_radius=CORNER_RADIUS,
+            font=("Arial", 20, "bold"), 
+            fg_color=("#002171", "#00E5FF"), 
+            text_color=("white", "black"),
+            hover_color=("#00154B", "#00B8D4"), corner_radius=CORNER_RADIUS,
             command=self.start_process
         )
         self.start_btn.grid(row=4, column=0, padx=PADDING, pady=(30, 20), sticky="ew")

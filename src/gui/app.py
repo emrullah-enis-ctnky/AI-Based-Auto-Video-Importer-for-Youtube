@@ -192,7 +192,7 @@ class YouTubeAutomationApp(ctk.CTk):
         # Use tuples for automatic (Light, Dark) mode switching
         from .styles import COLORS
         accent_tuple = (COLORS["light"]["accent"], COLORS["dark"]["accent"])
-        text_tuple = ("white", "black") # White on dark blue, Black on neon cyan
+        text_tuple = ("white", "black") # White on deep navy, Black on neon cyan
         
         self.home_button.configure(fg_color=accent_tuple, text_color=text_tuple)
         self.settings_button.configure(fg_color="transparent", text_color=("gray10", "gray90"))
