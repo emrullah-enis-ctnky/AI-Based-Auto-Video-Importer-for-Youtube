@@ -22,11 +22,11 @@ class MediaCard(ctk.CTkButton):
             image=self.icon_image,
             compound="top", # Icon on top of text
             font=FONTS["body"],
-            fg_color=ThemeManager.get_color("card_bg"),
+            fg_color=ThemeManager.get_tuple("card_bg"),
             border_width=2,
-            border_color=ThemeManager.get_color("border"),
-            hover_color=ThemeManager.get_color("card_hover"),
-            text_color=ThemeManager.get_color("text"),
+            border_color=ThemeManager.get_tuple("border"),
+            hover_color=ThemeManager.get_tuple("card_hover"),
+            text_color=ThemeManager.get_tuple("text"),
             command=command,
             width=450,
             height=320,
@@ -45,8 +45,8 @@ class MediaCard(ctk.CTkButton):
             
             self.configure(
                 text=f"\n{Localizer.translate(self.trans_key_title)}\n\n{name}",
-                border_color="#00E5FF",
-                text_color="#00E5FF"
+                border_color="#00E5FF", # Neon Cyan is fine for both? Or maybe darker for light?
+                text_color=("#0D47A1", "#00E5FF") # Dark Blue for light, Neon Cyan for dark
             )
             self._generate_preview(filename, is_video)
         else:
@@ -54,8 +54,8 @@ class MediaCard(ctk.CTkButton):
             self.configure(
                 text=f"\n{Localizer.translate(self.trans_key_title)}\n\n{Localizer.translate(self.trans_key_placeholder)}",
                 image=self.default_icon,
-                border_color=ThemeManager.get_color("border"),
-                text_color=ThemeManager.get_color("text")
+                border_color=ThemeManager.get_tuple("border"),
+                text_color=ThemeManager.get_tuple("text")
             )
 
     def refresh_localization(self):
@@ -110,7 +110,7 @@ class HomePage(ctk.CTkFrame):
             self.header_container, 
             text=Localizer.translate("app_title"), 
             font=("Arial", 38, "bold"),
-            text_color=ThemeManager.get_color("accent")
+            text_color=ThemeManager.get_tuple("accent")
         )
         self.welcome_label.grid(row=0, column=0)
 

@@ -130,6 +130,11 @@ class ThemeManager:
             return COLORS["dark"].get(key, "#FF00FF")
         return COLORS["light"].get(key, "#FF00FF")
 
+    @staticmethod
+    def get_tuple(key):
+        """Returns a (light, dark) color tuple for dynamic switching."""
+        return (COLORS["light"].get(key, "#FF00FF"), COLORS["dark"].get(key, "#FF00FF"))
+
 # UI Constants
 PADDING = 20
 CORNER_RADIUS = 10
