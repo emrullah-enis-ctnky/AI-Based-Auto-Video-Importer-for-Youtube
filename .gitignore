@@ -32,3 +32,14 @@ test_phase1.py
 
 build/
 dist/
+build/
+dist/
+*.spec
+*.egg-info/
+.DS_Store
+.mypy_cache/
+.tox/
+.nox/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
