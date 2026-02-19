@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from ..styles import PADDING, CORNER_RADIUS, FONTS, ThemeManager, Localizer
+from gui.styles import PADDING, CORNER_RADIUS, FONTS, ThemeManager, Localizer
 import os
 
 class LogWindow(ctk.CTkToplevel):
@@ -140,7 +140,7 @@ class ProcessPage(ctk.CTkFrame):
             self.upload_pc_label.configure(text=f"%{pc}")
 
     def start_automation(self, video_path, thumb_path, user_notes, use_compression, debug_mode):
-        from ..bridge import AutomationBridge
+        from bridge import AutomationBridge
         self.bridge = AutomationBridge(self.master.master, self)
         self.bridge.start(video_path, thumb_path, user_notes, use_compression, debug_mode)
 

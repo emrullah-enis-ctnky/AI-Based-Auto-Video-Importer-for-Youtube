@@ -1,11 +1,22 @@
-import customtkinter as ctk
-from .styles import ThemeManager, PADDING, CORNER_RADIUS, FONTS, Localizer
 import os
 import sys
-import locale
 
-# Add src to path to allow absolute imports from within src
-sys.path.append(os.path.join(os.getcwd(), 'src'))
+# Setup paths for both development and PyInstaller bundle
+if hasattr(sys, '_MEIPASS'):
+    # In bundle: sys._MEIPASS is the root
+    base_path = sys._MEIPASS
+    src_path = os.path.join(base_path, 'src')
+else:
+    # In development: use current working directory's src
+    src_path = os.path.join(os.getcwd(), 'src')
+
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
+
+import customtkinter as ctk
+# Now we can import using absolute names from the added paths
+from gui.styles import ThemeManager, PADDING, CORNER_RADIUS, FONTS, Localizer, get_resource_path
+import locale
 
 class YouTubeAutomationApp(ctk.CTk):
     def __init__(self):
@@ -31,7 +42,7 @@ class YouTubeAutomationApp(ctk.CTk):
         # Set Application Icon
         try:
             from PIL import Image
-            icon_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'icon.png')
+            icon_path = get_resource_path(os.path.join('src', 'assets', 'icon.png'))
             if os.path.exists(icon_path):
                 img = Image.open(icon_path)
                 # On Linux, iconphoto with PhotoImage is best
@@ -185,12 +196,12 @@ class YouTubeAutomationApp(ctk.CTk):
 
     def show_home(self):
         self._clear_main_content()
-        from .pages.home import HomePage
+        from gui.pages.home import HomePage
         self.home_page = HomePage(self.main_content_frame, fg_color="transparent")
         self.home_page.pack(fill="both", expand=True)
         
         # Use tuples for automatic (Light, Dark) mode switching
-        from .styles import COLORS
+        from gui.styles import COLORS
         accent_tuple = (COLORS["light"]["accent"], COLORS["dark"]["accent"])
         text_tuple = ("white", "black") # White on deep navy, Black on neon cyan
         
@@ -199,7 +210,7 @@ class YouTubeAutomationApp(ctk.CTk):
 
     def show_settings(self):
         self._clear_main_content()
-        from .pages.settings import SettingsPage
+        from gui.pages.settings import SettingsPage
         self.settings_page = SettingsPage(
             self.main_content_frame, 
             fg_color="transparent",
@@ -209,7 +220,7 @@ class YouTubeAutomationApp(ctk.CTk):
         )
         self.settings_page.pack(fill="both", expand=True)
         
-        from .styles import COLORS
+        from gui.styles import COLORS
         accent_tuple = (COLORS["light"]["accent"], COLORS["dark"]["accent"])
         text_tuple = ("white", "black")
 
@@ -218,7 +229,7 @@ class YouTubeAutomationApp(ctk.CTk):
 
     def show_process(self, video_path, thumb_path, user_notes):
         self._clear_main_content()
-        from .pages.process import ProcessPage
+        from gui.pages.process import ProcessPage
         self.process_page = ProcessPage(
             self.main_content_frame,
             video_path=video_path,

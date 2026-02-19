@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from ..styles import PADDING, CORNER_RADIUS, FONTS, ThemeManager, Localizer
+from gui.styles import PADDING, CORNER_RADIUS, FONTS, ThemeManager, Localizer, get_resource_path
 from tkinter import filedialog
 from PIL import Image
 import os
@@ -121,11 +121,12 @@ class HomePage(ctk.CTkFrame):
         self.cards_frame.grid_rowconfigure(0, weight=1)
 
         # Video Card
+        from ..styles import get_resource_path
         self.video_card = MediaCard(
             self.cards_frame, 
             trans_key_title="video_upload", 
             trans_key_placeholder="video_desc", 
-            icon_path="src/gui/assets/video_icon.png", 
+            icon_path=get_resource_path(os.path.join("src", "gui", "assets", "video_icon.png")), 
             command=self.select_video
         )
         self.video_card.grid(row=0, column=0, padx=15, pady=10, sticky="nsew")
@@ -135,7 +136,7 @@ class HomePage(ctk.CTkFrame):
             self.cards_frame, 
             trans_key_title="thumb_upload", 
             trans_key_placeholder="thumb_desc", 
-            icon_path="src/gui/assets/thumb_icon.png", 
+            icon_path=get_resource_path(os.path.join("src", "gui", "assets", "thumb_icon.png")), 
             command=self.select_thumbnail
         )
         self.thumb_card.grid(row=0, column=1, padx=15, pady=10, sticky="nsew")

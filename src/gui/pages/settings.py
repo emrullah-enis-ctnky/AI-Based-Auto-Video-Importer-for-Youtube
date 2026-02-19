@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from ..styles import PADDING, CORNER_RADIUS, FONTS, Localizer
+from gui.styles import PADDING, CORNER_RADIUS, FONTS, Localizer
 
 class SettingsPage(ctk.CTkFrame):
     def __init__(self, master, compression_var, debug_var, lang_var, **kwargs):

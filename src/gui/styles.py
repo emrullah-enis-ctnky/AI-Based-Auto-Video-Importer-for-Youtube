@@ -135,6 +135,14 @@ class ThemeManager:
         """Returns a (light, dark) color tuple for dynamic switching."""
         return (COLORS["light"].get(key, "#FF00FF"), COLORS["dark"].get(key, "#FF00FF"))
 
+def get_resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    import sys
+    import os
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
+
 # UI Constants
 PADDING = 20
 CORNER_RADIUS = 10
