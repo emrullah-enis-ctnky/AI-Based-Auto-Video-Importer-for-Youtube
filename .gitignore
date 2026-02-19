@@ -29,3 +29,6 @@ env/
 
 # Test scripts
 test_phase1.py
+
+build/
+dist/
