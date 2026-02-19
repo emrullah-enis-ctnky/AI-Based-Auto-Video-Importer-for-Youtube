@@ -1,55 +1,84 @@
 import customtkinter as ctk
-from ..styles import PADDING, CORNER_RADIUS, FONTS
+from ..styles import PADDING, CORNER_RADIUS, FONTS, Localizer
 
 class SettingsPage(ctk.CTkFrame):
-    def __init__(self, master, compression_var, debug_var, **kwargs):
+    def __init__(self, master, compression_var, debug_var, lang_var, **kwargs):
         super().__init__(master, **kwargs)
+        self.lang_var = lang_var
         
         self.grid_columnconfigure(0, weight=1)
-
-        # Title
-        self.title_label = ctk.CTkLabel(self, text="Uygulama Ayarları", font=FONTS["header"])
-        self.title_label.grid(row=0, column=0, padx=PADDING, pady=(0, 20), sticky="w")
-
-        # AI Settings Group
-        self.ai_group = ctk.CTkFrame(self, corner_radius=CORNER_RADIUS)
-        self.ai_group.grid(row=1, column=0, padx=PADDING, pady=10, sticky="ew")
-        self.ai_group.grid_columnconfigure(0, weight=1)
-
-        self.ai_label = ctk.CTkLabel(self.ai_group, text="AI Optimizasyon", font=FONTS["body"], text_color="#00E5FF")
-        self.ai_label.grid(row=0, column=0, padx=20, pady=(15, 5), sticky="w")
-
-        self.compression_switch = ctk.CTkSwitch(
-            self.ai_group, text="Hızlı AI Analizi (Video Sıkıştırma)", 
-            variable=compression_var,
-            font=FONTS["body"]
-        )
-        self.compression_switch.grid(row=1, column=0, padx=40, pady=10, sticky="w")
         
-        self.comp_desc = ctk.CTkLabel(
-            self.ai_group, 
-            text="Analiz öncesi videoyu geçici olarak küçültür. YouTube kalitesini etkilemez.",
-            font=FONTS["small"], text_color="gray"
+        # 1. Header
+        self.header_label = ctk.CTkLabel(self, text=Localizer.translate("settings"), font=FONTS["title"])
+        self.header_label.grid(row=0, column=0, padx=PADDING, pady=(10, 30), sticky="w")
+
+        # 2. Settings Group
+        self.settings_frame = ctk.CTkFrame(self, fg_color=("gray90", "gray15"), corner_radius=CORNER_RADIUS)
+        self.settings_frame.grid(row=1, column=0, padx=PADDING, pady=10, sticky="ew")
+        self.settings_frame.grid_columnconfigure(0, weight=1)
+
+        # Language Selection row
+        self.lang_row = ctk.CTkFrame(self.settings_frame, fg_color="transparent")
+        self.lang_row.grid(row=0, column=0, sticky="ew", padx=20, pady=15)
+        self.lang_row.grid_columnconfigure(0, weight=1)
+
+        self.lang_label = ctk.CTkLabel(self.lang_row, text=Localizer.translate("lang"), font=FONTS["header"])
+        self.lang_label.grid(row=0, column=0, sticky="w")
+        
+        # Determine initial selection display
+        current_display = "Türkçe" if self.lang_var.get() == "tr" else "English"
+        
+        self.lang_menu = ctk.CTkOptionMenu(
+            self.lang_row, values=["Türkçe", "English"],
+            command=self.on_lang_change
         )
-        self.comp_desc.grid(row=2, column=0, padx=40, pady=(0, 15), sticky="w")
+        self.lang_menu.set(current_display)
+        self.lang_menu.grid(row=0, column=1, sticky="e")
 
-        # System Settings Group
-        self.sys_group = ctk.CTkFrame(self, corner_radius=CORNER_RADIUS)
-        self.sys_group.grid(row=2, column=0, padx=PADDING, pady=10, sticky="ew")
-        self.sys_group.grid_columnconfigure(0, weight=1)
+        # Media Compression row
+        self.comp_row = ctk.CTkFrame(self.settings_frame, fg_color="transparent")
+        self.comp_row.grid(row=1, column=0, sticky="ew", padx=20, pady=15)
+        self.comp_row.grid_columnconfigure(0, weight=1)
 
-        self.sys_label = ctk.CTkLabel(self.sys_group, text="Sistem ve Debug", font=FONTS["body"], text_color="#00E5FF")
-        self.sys_label.grid(row=0, column=0, padx=20, pady=(15, 5), sticky="w")
+        self.comp_label = ctk.CTkLabel(self.comp_row, text=Localizer.translate("compression"), font=FONTS["header"])
+        self.comp_label.grid(row=0, column=0, sticky="w")
+        
+        self.comp_switch = ctk.CTkSwitch(self.comp_row, text="", variable=compression_var)
+        self.comp_switch.grid(row=0, column=1, sticky="e")
 
-        self.debug_switch = ctk.CTkSwitch(
-            self.sys_group, text="Gelişmiş Debug Modu", 
-            variable=debug_var,
-            font=FONTS["body"]
+        self.comp_info_label = ctk.CTkLabel(
+            self.settings_frame, 
+            text=Localizer.translate("compression_info"), 
+            font=FONTS["small"], 
+            text_color="gray",
+            wraplength=800,
+            justify="left"
         )
-        self.debug_switch.grid(row=1, column=0, padx=40, pady=15, sticky="w")
+        self.comp_info_label.grid(row=2, column=0, padx=20, pady=(0, 15), sticky="w")
+
+        # Debug Mode row
+        self.debug_row = ctk.CTkFrame(self.settings_frame, fg_color="transparent")
+        self.debug_row.grid(row=3, column=0, sticky="ew", padx=20, pady=15)
+        self.debug_row.grid_columnconfigure(0, weight=1)
+
+        self.debug_label = ctk.CTkLabel(self.debug_row, text=Localizer.translate("debug_mode"), font=FONTS["header"])
+        self.debug_label.grid(row=0, column=0, sticky="w")
+        
+        self.debug_switch = ctk.CTkSwitch(self.debug_row, text="", variable=debug_var)
+        self.debug_switch.grid(row=0, column=1, sticky="e")
 
         self.info_label = ctk.CTkLabel(
-            self, text="v1.0.0 - AI-Powered Auto Video Importer", 
+            self, text="v1.1.0 - AI-Powered Auto Video Importer", 
             font=FONTS["small"], text_color="gray"
         )
         self.info_label.grid(row=10, column=0, pady=40)
+
+    def on_lang_change(self, val):
+        self.winfo_toplevel().change_language(val)
+
+    def refresh_localization(self):
+        self.header_label.configure(text=Localizer.translate("settings"))
+        self.lang_label.configure(text=Localizer.translate("lang"))
+        self.comp_label.configure(text=Localizer.translate("compression"))
+        self.comp_info_label.configure(text=Localizer.translate("compression_info"))
+        self.debug_label.configure(text=Localizer.translate("debug_mode"))
