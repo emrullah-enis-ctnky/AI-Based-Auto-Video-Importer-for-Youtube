@@ -8,3 +8,4 @@ tk
 rich
 Pillow
 ffmpeg-python
+customtkinter

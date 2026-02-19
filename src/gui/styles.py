@@ -30,11 +30,11 @@ COLORS = {
 
 # Typography
 FONTS = {
-    "title": ("Inter", 24, "bold"),
-    "header": ("Inter", 18, "bold"),
-    "body": ("Inter", 13, "normal"),
-    "small": ("Inter", 11, "normal"),
-    "mono": ("Consolas", 12, "normal")
+    "title": ("Inter", 32, "bold"),
+    "header": ("Inter", 22, "bold"),
+    "body": ("Inter", 16, "normal"),
+    "small": ("Inter", 13, "normal"),
+    "mono": ("Consolas", 14, "normal")
 }
 
 class ThemeManager:
