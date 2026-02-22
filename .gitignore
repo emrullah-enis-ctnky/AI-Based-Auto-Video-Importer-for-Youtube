@@ -43,3 +43,4 @@ dist/
 .coverage
 htmlcov/
 .ipynb_checkpoints/
+token.pickle

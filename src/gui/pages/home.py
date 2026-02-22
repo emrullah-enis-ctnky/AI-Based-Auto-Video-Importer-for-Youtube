@@ -220,7 +220,6 @@ class HomePage(ctk.CTkFrame):
         if notes == self.placeholder_text:
             notes = ""
             
-        # Call bridge through app (app -> main_content_frame -> HomePage)
-        # Structure is YouTubeAutomationApp (master.master) -> main_content_frame (master) -> HomePage
-        self.master.master.show_process(self.video_path, self.thumb_path, notes)
+        # Call bridge through app
+        self.winfo_toplevel().show_process(self.video_path, self.thumb_path, notes)
 

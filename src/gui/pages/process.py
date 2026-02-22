@@ -140,16 +140,16 @@ class ProcessPage(ctk.CTkFrame):
             self.upload_pc_label.configure(text=f"%{pc}")
 
     def start_automation(self, video_path, thumb_path, user_notes, use_compression, debug_mode):
-        from bridge import AutomationBridge
-        self.bridge = AutomationBridge(self.master.master, self)
+        from gui.bridge import AutomationBridge
+        self.bridge = AutomationBridge(self.winfo_toplevel(), self)
         self.bridge.start(video_path, thumb_path, user_notes, use_compression, debug_mode)
 
     def on_cancel(self):
         from tkinter import messagebox
         if messagebox.askyesno("Onay", "İşlemi iptal etmek istediğinize emin misiniz?"):
-            self.master.master.show_home() 
+            self.winfo_toplevel().show_home() 
 
     def on_finish(self):
         if self.log_window and self.log_window.winfo_exists():
             self.log_window.destroy()
-        self.master.master.show_home()
+        self.winfo_toplevel().show_home()
