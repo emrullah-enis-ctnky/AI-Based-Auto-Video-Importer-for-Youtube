@@ -34,7 +34,7 @@ build/
 dist/
 build/
 dist/
-*.spec
+# *.spec
 *.egg-info/
 .DS_Store
 .mypy_cache/

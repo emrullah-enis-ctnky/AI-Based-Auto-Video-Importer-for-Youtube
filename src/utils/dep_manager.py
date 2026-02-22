@@ -1,8 +1,14 @@
 import subprocess
 import sys
 import os
-import pkg_resources
+import importlib.metadata
 from .logger import logger
+
+# PyPI name mappings
+# Sometimes PyPI package names in requirements.txt (e.g. google-api-python-client)
+# don't perfectly match the distribution name registered under importlib.
+# importlib generally normalizes dashes to dashes, but maps differ mostly on imports, not package installs.
+# So importlib.metadata.version("google-api-python-client") usually works!
 
 def get_requirements():
     """
@@ -20,6 +26,10 @@ def check_and_install_dependencies():
     """
     Checks if required packages are installed, and installs them if missing.
     """
+    # PyInstaller executable'ı içindeysek bağımlılık kontrolü/kurulumu yapma
+    if getattr(sys, 'frozen', False):
+        return
+
     logger.info("Bağımlılıklar kontrol ediliyor...")
     requirements = get_requirements()
     
@@ -32,8 +42,8 @@ def check_and_install_dependencies():
         package_name = requirement.split("==")[0].split(">=")[0].split("<=")[0].strip()
         
         try:
-            pkg_resources.require(requirement)
-        except (pkg_resources.DistributionNotFound, pkg_resources.VersionConflict):
+            importlib.metadata.version(package_name)
+        except importlib.metadata.PackageNotFoundError:
             missing_packages.append(requirement)
 
     if missing_packages:

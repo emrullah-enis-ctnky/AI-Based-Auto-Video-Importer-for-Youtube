@@ -1,8 +1,13 @@
 import sys
 import os
 
-# Add src to path
-sys.path.append(os.path.join(os.getcwd(), 'src'))
+# Setup pathing: Add 'src' to path in development mode.
+# In PyInstaller frozen mode, modules are bundled and reachable via standard imports.
+if not getattr(sys, 'frozen', False):
+    bundle_dir = os.path.dirname(os.path.abspath(__file__))
+    src_path = os.path.join(bundle_dir, 'src')
+    if src_path not in sys.path:
+        sys.path.insert(0, src_path)
 
 from utils.app_init import initialize_app
 from utils.dep_manager import check_and_install_dependencies
@@ -13,28 +18,47 @@ def main():
     """
     Main orchestration function.
     """
-    # 0. Stylish Banner
-    logger.banner("🚀 AI-Powered YouTube Automation Tool")
-
-    # 1. Initialize Folders and Config
-    logger.step(1, "Sistem Başlatılıyor")
-    if not initialize_app():
-        sys.exit(1)
+    # 0. Check for CLI mode vs GUI mode
+    import sys
+    
+    # If any arguments besides the script name are passed, run in CLI mode.
+    # Otherwise, fire up the GUI.
+    if len(sys.argv) > 1:
+        logger.banner("🚀 AI-Powered YouTube Automation Tool (CLI Mode)")
         
-    # 2. Check/Install Dependencies
-    logger.step(2, "Bağımlılık Kontrolü")
-    check_and_install_dependencies()
-    
-    # 3. Get Inputs (CLI or GUI)
-    logger.step(3, "Giriş Bilgileri")
-    video_path, thumbnail_path, user_notes, debug_mode, use_compression = get_inputs()
-    
-    if debug_mode:
-        import logging
-        logger.logger.setLevel(logging.DEBUG)
-        logger.info("Debug modu aktif edildi. Detaylı loglar gösteriliyor.")
-    
-    logger.success("Giriş verileri başarıyla alındı.")
+        # 1. Initialize Folders and Config
+        logger.step(1, "Sistem Başlatılıyor")
+        if not initialize_app():
+            sys.exit(1)
+            
+        # 2. Check/Install Dependencies
+        logger.step(2, "Bağımlılık Kontrolü")
+        check_and_install_dependencies()
+        
+        # 3. Get Inputs (CLI or GUI dialogs)
+        logger.step(3, "Giriş Bilgileri")
+        video_path, thumbnail_path, user_notes, debug_mode, use_compression = get_inputs()
+        
+        if debug_mode:
+            import logging
+            logger.logger.setLevel(logging.DEBUG)
+            logger.info("Debug modu aktif edildi. Detaylı loglar gösteriliyor.")
+        
+        logger.success("Giriş verileri başarıyla alındı.")
+    else:
+        # Launch Graphical User Interface
+        try:
+            from gui.app import YouTubeAutomationApp
+            app = YouTubeAutomationApp()
+            app.mainloop()
+            return # Exit cleanly after GUI closes
+        except Exception as e:
+            # Use standard print as well to ensure visibility if logger fails
+            print(f"\nCRITICAL GUI ERROR: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            logger.error(f"Arayüz (GUI) başlatılamadı: {str(e)}")
+            sys.exit(1)
 
     # 4. AI Analysis
     logger.step(4, "AI Multimodal Analiz (Video + Görsel + Notlar)")

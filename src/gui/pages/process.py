@@ -20,10 +20,12 @@ class LogWindow(ctk.CTkToplevel):
         self.log_text.configure(state="disabled")
 
     def write_log(self, message):
-        self.log_text.configure(state="normal")
-        self.log_text.insert("end", f"> {message}\n")
-        self.log_text.see("end")
-        self.log_text.configure(state="disabled")
+        def _update():
+            self.log_text.configure(state="normal")
+            self.log_text.insert("end", f"> {message}\\n")
+            self.log_text.see("end")
+            self.log_text.configure(state="disabled")
+        self.after(0, _update)
 
 class ProcessPage(ctk.CTkFrame):
     def __init__(self, master, video_path, thumb_path, user_notes, use_compression, debug_mode, **kwargs):
@@ -117,10 +119,12 @@ class ProcessPage(ctk.CTkFrame):
         self.finish_btn.configure(text=Localizer.translate("finish_btn"))
 
     def write_log(self, message):
-        msg = f"> {message}"
-        self.logs_history.append(msg)
-        if self.log_window and self.log_window.winfo_exists():
-            self.log_window.write_log(message)
+        def _update():
+            msg = f"> {message}"
+            self.logs_history.append(msg)
+            if self.log_window and self.log_window.winfo_exists():
+                self.log_window.write_log(message)
+        self.after(0, _update)
 
     def toggle_logs(self):
         if self.log_window is None or not self.log_window.winfo_exists():
@@ -131,13 +135,23 @@ class ProcessPage(ctk.CTkFrame):
             self.log_window.focus()
 
     def update_progress(self, stage, value):
-        pc = int(value * 100)
-        if stage == "ai":
-            self.ai_progress.set(value)
-            self.ai_pc_label.configure(text=f"%{pc}")
-        elif stage == "upload":
-            self.upload_progress.set(value)
-            self.upload_pc_label.configure(text=f"%{pc}")
+        def _update():
+            pc = int(value * 100)
+            if stage == "ai":
+                self.ai_progress.set(value)
+                self.ai_pc_label.configure(text=f"%{pc}")
+            elif stage == "upload":
+                self.upload_progress.set(value)
+                self.upload_pc_label.configure(text=f"%{pc}")
+        self.after(0, _update)
+
+    def set_progress_color(self, stage, color):
+        def _update():
+            if stage == "ai":
+                self.ai_progress.configure(progress_color=color)
+            elif stage == "upload":
+                self.upload_progress.configure(progress_color=color)
+        self.after(0, _update)
 
     def start_automation(self, video_path, thumb_path, user_notes, use_compression, debug_mode):
         from gui.bridge import AutomationBridge

@@ -18,7 +18,7 @@ def get_youtube_service():
     Uses local token.json if available, otherwise starts OAuth flow.
     """
     creds = None
-    token_file = 'token.pickle'
+    token_file = config.TOKEN_FILE
     client_secret_file = config.CLIENT_SECRET_FILE
 
     # 1. Load existing credentials from pickle file
@@ -31,8 +31,16 @@ def get_youtube_service():
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             logger.info("Oturum süresi dolmuş, yenileniyor...")
-            creds.refresh(Request())
-        else:
+            try:
+                creds.refresh(Request())
+            except Exception as e:
+                logger.warning(f"Eski oturum yenilenemedi ({str(e)}). Yeniden giriş yapılacak.")
+                if os.path.exists(token_file):
+                    os.remove(token_file)
+                creds = None
+        
+        # We check again because creds might have been invalidated and set to None above
+        if not creds or not creds.valid:
             if not os.path.exists(client_secret_file):
                 logger.error(f"Hata: '{client_secret_file}' dosyası bulunamadı!")
                 logger.info("Lütfen Google Cloud Console'dan istemci sırrını indirin.")
@@ -42,10 +50,10 @@ def get_youtube_service():
             flow = InstalledAppFlow.from_client_secrets_file(client_secret_file, SCOPES)
             creds = flow.run_local_server(port=0)
         
-        # Save credentials for next time
-        with open(token_file, 'wb') as token:
-            pickle.dump(creds, token)
-            logger.success("Oturum bilgileri (token.pickle) kaydedildi.")
+            # Save credentials for next time
+            with open(token_file, 'wb') as token:
+                pickle.dump(creds, token)
+                logger.success("Oturum bilgileri (token.pickle) kaydedildi.")
 
     try:
         service = build('youtube', 'v3', credentials=creds)

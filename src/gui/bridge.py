@@ -50,7 +50,7 @@ class AutomationBridge:
             
             if not metadata:
                 self.page.write_log("HATA: AI Analysis FAILED")
-                self.page.ai_progress.configure(progress_color="red")
+                self.page.set_progress_color("ai", "red")
                 return
 
             self.page.update_progress("ai", 1.0)
@@ -71,7 +71,7 @@ class AutomationBridge:
             
             if not video_id:
                 self.page.write_log("HATA: Upload FAILED")
-                self.page.upload_progress.configure(progress_color="red")
+                self.page.set_progress_color("upload", "red")
                 return
 
             # FORCE 100% AFTER UPLOAD
@@ -86,6 +86,9 @@ class AutomationBridge:
             
             self.page.write_log(Localizer.translate("all_done"))
             self.page.write_log(f"{Localizer.translate('video_link')} https://youtu.be/{video_id}")
+            
+            # Print to true terminal as well so the user knows it's safely finished
+            logger.banner("✨ İŞLEM BAŞARIYLA TAMAMLANDI - ARAYÜZ (GUI) AÇIK KALABİLİR")
             
             # Show finish button and hide control buttons
             def finalize_ui():

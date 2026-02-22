@@ -73,7 +73,9 @@ TRANSLATIONS = {
         "cancel_confirm": "İşlemi iptal etmek istediğinize emin misiniz?",
         "all_done": "✅ Tüm işlemler başarıyla tamamlandı!",
         "video_link": "🎬 Video Linki:",
-        "system": "Sistem"
+        "system": "Sistem",
+        "logout_btn": "OTURUMU KAPAT / KANAL DEĞİŞTİR",
+        "logout_confirm": "Mevcut oturum kapatılacak ve sonraki işlemde tekrar giriş yapmanız istenecek. Emin misiniz?"
     },
     "en": {
         "home": "Home Page",
@@ -105,7 +107,9 @@ TRANSLATIONS = {
         "cancel_confirm": "Are you sure you want to cancel?",
         "all_done": "✅ All processes completed successfully!",
         "video_link": "🎬 Video Link:",
-        "system": "System"
+        "system": "System",
+        "logout_btn": "LOG OUT / SWITCH ACCOUNT",
+        "logout_confirm": "Current session will be closed and you will be asked to log in again for the next process. Are you sure?"
     }
 }
 
