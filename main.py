@@ -37,7 +37,7 @@ def main():
         
         # 3. Get Inputs (CLI or GUI dialogs)
         logger.step(3, "Giriş Bilgileri")
-        video_path, thumbnail_path, user_notes, debug_mode, use_compression = get_inputs()
+        video_path, thumbnail_path, user_notes, debug_mode, use_compression, playlist_title = get_inputs()
         
         if debug_mode:
             import logging
@@ -91,6 +91,7 @@ def main():
     from youtube.auth import get_youtube_service
     from youtube.uploader import upload_video
     from youtube.thumbnail import set_thumbnail
+    from youtube.playlist import get_or_create_playlist, add_video_to_playlist
     
     youtube = get_youtube_service()
     if not youtube:
@@ -102,6 +103,12 @@ def main():
     if video_id:
         if thumbnail_path:
             set_thumbnail(youtube, video_id, thumbnail_path)
+            
+        if playlist_title:
+            logger.info(f"Oynatma listesi işlemleri başlatılıyor: {playlist_title}")
+            playlist_id = get_or_create_playlist(youtube, playlist_title)
+            if playlist_id:
+                add_video_to_playlist(youtube, video_id, playlist_id)
         
         # Her Şey Hazır - Final Effect
         logger.banner("✨ İŞLEM BAŞARIYLA TAMAMLANDI")

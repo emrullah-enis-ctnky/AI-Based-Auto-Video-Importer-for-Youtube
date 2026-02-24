@@ -24,6 +24,7 @@ def get_inputs():
     parser = argparse.ArgumentParser(description="AI-Powered YouTube Automation Tool")
     parser.add_argument("--video", type=str, help="Path to the video file")
     parser.add_argument("--thumbnail", type=str, help="Path to the thumbnail image")
+    parser.add_argument("--playlist", type=str, help="YouTube playlist title to add the video to")
     parser.add_argument("--notes", type=str, help="Extra notes for AI analysis")
     parser.add_argument("--debug", action="store_true", help="Enable detailed debug logging")
     
@@ -32,6 +33,7 @@ def get_inputs():
     video_path = args.video
     thumbnail_path = args.thumbnail
     user_notes = args.notes
+    playlist_title = args.playlist
     
     # Fallback to File Dialog for Video
     if not video_path:
@@ -67,6 +69,14 @@ def get_inputs():
         else:
             logger.info("Ek not belirtilmedi.")
 
+    # Playlist input (Interactive prompt removed to keep it optional and fast)
+    if not playlist_title:
+        # We don't force a prompt here to keep it strictly optional as per "ek bir parametre" request.
+        # However, if we wanted to be consistent:
+        # from rich.prompt import Prompt
+        # playlist_title = Prompt.ask("\n[bold cyan]Bir oynatma listesine eklensin mi?[/bold cyan] (Boş bırakılabilir)", default="")
+        pass
+
     # Compression Check & Prompt
     from .media_processor import is_ffmpeg_installed
     from rich.prompt import Confirm
@@ -90,7 +100,7 @@ def get_inputs():
         logger.error(f"Thumbnail dosyası bulunamadı: {thumbnail_path}")
         sys.exit(1)
         
-    return video_path, thumbnail_path, user_notes, args.debug, use_compression
+    return video_path, thumbnail_path, user_notes, args.debug, use_compression, playlist_title
 
 if __name__ == "__main__":
     v, t = get_inputs()
