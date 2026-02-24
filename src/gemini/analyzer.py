@@ -29,17 +29,11 @@ def analyze_content(video_path, thumbnail_path, user_notes="", use_compression=F
             
             # Prepare temp paths
             v_temp = os.path.join("temp", f"ai_video_{int(time.time())}.mp4")
-            t_temp = os.path.join("temp", f"ai_thumb_{int(time.time())}.jpg")
-            
-            v_ai_path = compress_video_for_ai(video_path, v_temp)
-            if v_ai_path != video_path:
-                temp_files.append(v_ai_path)
-            
-            if progress_callback: progress_callback("ai", 0.15)
-                
-            t_ai_path = compress_image_for_ai(thumbnail_path, t_temp)
-            if t_ai_path != thumbnail_path:
-                temp_files.append(t_ai_path)
+            if thumbnail_path:
+                t_temp = os.path.join("temp", f"ai_thumb_{int(time.time())}.jpg")
+                t_ai_path = compress_image_for_ai(thumbnail_path, t_temp)
+                if t_ai_path != thumbnail_path:
+                    temp_files.append(t_ai_path)
             
             if progress_callback: progress_callback("ai", 0.25)
 
@@ -48,7 +42,9 @@ def analyze_content(video_path, thumbnail_path, user_notes="", use_compression=F
         
         # 2. Upload Files
         video_file = genai.upload_file(path=v_ai_path)
-        thumbnail_file = genai.upload_file(path=t_ai_path)
+        thumbnail_file = None
+        if t_ai_path:
+            thumbnail_file = genai.upload_file(path=t_ai_path)
         
         # 3. Wait for Video processing
         while video_file.state.name == "PROCESSING":
@@ -72,7 +68,10 @@ def analyze_content(video_path, thumbnail_path, user_notes="", use_compression=F
         for attempt in range(max_retries):
             try:
                 if progress_callback: progress_callback("ai", 0.8)
-                response = model.generate_content([video_file, thumbnail_file, final_prompt])
+                prompt_items = [video_file, final_prompt]
+                if thumbnail_file:
+                    prompt_items.insert(1, thumbnail_file)
+                response = model.generate_content(prompt_items)
                 break
             except Exception as e:
                 if attempt < max_retries - 1:
@@ -104,7 +103,8 @@ def analyze_content(video_path, thumbnail_path, user_notes="", use_compression=F
             try:
                 # AI Server Cleanup
                 genai.delete_file(video_file.name)
-                genai.delete_file(thumbnail_file.name)
+                if thumbnail_file:
+                    genai.delete_file(thumbnail_file.name)
                 
                 # Local Temp Cleanup
                 for tf in temp_files:

@@ -47,15 +47,16 @@ def get_inputs():
 
     # Fallback to File Dialog for Thumbnail
     if not thumbnail_path:
-        logger.info("Thumbnail (Küçük Resim) seçilmesi bekleniyor...")
+        logger.info("Thumbnail (Küçük Resim) seçimi isteğe bağlıdır. Atlamak için iptal edebilirsiniz.")
         thumbnail_path = get_file_dialog(
-            "Thumbnail (Küçük Resim) Seçin", 
+            "Thumbnail (Küçük Resim) Seçin (Opsiyonel)", 
             [("Resim Dosyaları", "*.jpg *.jpeg *.png"), ("Tüm Dosyalar", "*.*")]
         )
-        if not thumbnail_path:
-            logger.error("Thumbnail seçilmedi. İşlem iptal ediliyor.")
-            sys.exit(1)
-        logger.info(f"Seçilen Thumbnail: {os.path.basename(thumbnail_path)}")
+        if thumbnail_path:
+            logger.info(f"Seçilen Thumbnail: {os.path.basename(thumbnail_path)}")
+        else:
+            logger.info("Thumbnail seçilmedi, işleme thumbnailsiz devam edilecek.")
+            thumbnail_path = None
 
     # Interactive input for notes if not provided
     if not user_notes:
@@ -85,7 +86,7 @@ def get_inputs():
         logger.error(f"Video dosyası bulunamadı: {video_path}")
         sys.exit(1)
     
-    if not os.path.exists(thumbnail_path):
+    if thumbnail_path and not os.path.exists(thumbnail_path):
         logger.error(f"Thumbnail dosyası bulunamadı: {thumbnail_path}")
         sys.exit(1)
         
