@@ -37,7 +37,7 @@ def main():
         
         # 3. Get Inputs (CLI or GUI dialogs)
         logger.step(3, "Giriş Bilgileri")
-        video_path, thumbnail_path, user_notes, debug_mode, use_compression, playlist_title = get_inputs()
+        video_path, thumbnail_path, user_notes, debug_mode, use_compression, playlist_title, no_ai, manual_title, manual_description, manual_tags = get_inputs()
         
         if debug_mode:
             import logging
@@ -60,31 +60,47 @@ def main():
             logger.error(f"Arayüz (GUI) başlatılamadı: {str(e)}")
             sys.exit(1)
 
-    # 4. AI Analysis
-    logger.step(4, "AI Multimodal Analiz (Video + Görsel + Notlar)")
-    from gemini.analyzer import analyze_content
+    # 4. AI Analysis or Manual Metadata
+    from gemini.models import VideoMetadata
     from rich.panel import Panel
     from rich.table import Table
-    
-    metadata = analyze_content(video_path, thumbnail_path, user_notes, use_compression)
-    
-    if metadata:
-        logger.success("AI Analizi başarıyla tamamlandı!")
+    if not no_ai:
+        logger.step(4, "AI Multimodal Analiz (Video + Görsel + Notlar)")
+        from gemini.analyzer import analyze_content
         
-        # Display Results
-        table = Table(title="Generate Edilen Metadata", show_header=True, header_style="bold magenta")
-        table.add_column("Alan", style="cyan", width=12)
-        table.add_column("İçerik", style="white")
+        metadata = analyze_content(video_path, thumbnail_path, user_notes, use_compression)
         
-        table.add_row("Başlık", metadata.title)
-        table.add_row("Açıklama", metadata.description[:200] + "..." if len(metadata.description) > 200 else metadata.description)
-        table.add_row("Etiketler", ", ".join(metadata.tags))
-        
-        from utils.logger import console
-        console.print(table)
+        if metadata:
+            logger.success("AI Analizi başarıyla tamamlandı!")
+        else:
+            logger.error("AI Analizi başarısız oldu. Lütfen logları kontrol edin.")
+            sys.exit(1)
     else:
-        logger.error("AI Analizi başarısız oldu. Lütfen logları kontrol edin.")
-        sys.exit(1)
+        logger.step(4, "Manuel Metadata Hazırlanıyor (AI Devre Dışı)")
+        # If no title provided, use filename
+        if not manual_title:
+            manual_title = os.path.splitext(os.path.basename(video_path))[0]
+            logger.info(f"Başlık belirtilmedi, dosya adı kullanılıyor: {manual_title}")
+            
+        metadata = VideoMetadata(
+            title=manual_title,
+            description=manual_description if manual_description else "",
+            tags=[tag.strip() for tag in manual_tags.split(",")] if manual_tags else []
+        )
+        logger.success("Manuel metadata başarıyla hazırlandı.")
+
+    # Shared Table Display for Results
+    from utils.logger import console
+    
+    table = Table(title="Video Metadata", show_header=True, header_style="bold magenta")
+    table.add_column("Alan", style="cyan", width=12)
+    table.add_column("İçerik", style="white")
+    
+    table.add_row("Başlık", metadata.title)
+    table.add_row("Açıklama", metadata.description[:200] + "..." if len(metadata.description) > 200 else metadata.description)
+    table.add_row("Etiketler", ", ".join(metadata.tags))
+    
+    console.print(table)
     
     # 5. YouTube Automation
     logger.step(5, "YouTube Yükleme")
@@ -118,7 +134,7 @@ def main():
             f"[bold cyan]VİDEO ID      :[/bold cyan] [white]{video_id}[/white]\n"
             f"[bold cyan]YOUTUBE LİNKİ :[/bold cyan] [underline blue]https://youtu.be/{video_id}[/underline blue]\n"
             f"[bold cyan]GİZLİLİK      :[/bold cyan] [bold yellow]ÖZEL (PRIVATE)[/bold yellow]\n"
-            f"[bold cyan]AI ANALİZİ    :[/bold cyan] [italic magenta]MULTIMODAL TAMAMLANDI[/italic magenta]\n\n"
+            f"[bold cyan]AI ANALİZİ    :[/bold cyan] [italic magenta]{'MULTIMODAL TAMAMLANDI' if not no_ai else 'DEVRE DIŞI (MANUEL)'}[/italic magenta]\n\n"
             "[bold green]>>> HER ŞEY HAZIR. GÖREV TAMAMLANDI. <<<[/bold green]",
             title="[bold white]SİSTEM ÖZETİ[/bold white]",
             border_style="bold cyan",
